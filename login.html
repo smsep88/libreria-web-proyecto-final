@@ -43,16 +43,34 @@
       <!-- aqui se muestran avisos (error, registro ok, etc.) -->
       <div id="avisoLogin"></div>
 
-      <form id="formLogin" action="login.php" method="post">
+      <form id="formLogin" action="login.php" method="post" novalidate>
         <div class="mb-3">
           <label for="email" class="form-label">Correo electrónico</label>
           <input type="email" class="form-control" id="email" name="email"
                  placeholder="nombre@correo.cl" required>
+          <div class="invalid-feedback">Escribe un correo válido, por ejemplo nombre@correo.cl</div>
         </div>
-        <div class="mb-3">
+        <div class="mb-2">
           <label for="password" class="form-label">Contraseña</label>
-          <input type="password" class="form-control" id="password" name="password" required>
+          <div class="input-group has-validation">
+            <input type="password" class="form-control" id="password" name="password" required>
+            <button class="btn btn-outline-secondary" type="button" id="verClave">Ver</button>
+            <div class="invalid-feedback">La contraseña no cumple los requisitos de seguridad.</div>
+          </div>
         </div>
+
+        <!-- barra de seguridad y lista de requisitos -->
+        <div class="progress barra-fina mb-1">
+          <div id="barraClave" class="progress-bar" role="progressbar" style="width: 0%"></div>
+        </div>
+        <small id="textoNivel" class="text-muted">Seguridad: vacía</small>
+        <ul class="lista-requisitos mt-2 mb-3">
+          <li data-req="largo">Mínimo 8 caracteres</li>
+          <li data-req="mayuscula">Una letra mayúscula</li>
+          <li data-req="minuscula">Una letra minúscula</li>
+          <li data-req="numero">Un número</li>
+          <li data-req="simbolo">Un símbolo (por ejemplo ! # $ %)</li>
+        </ul>
         <button type="submit" class="btn btn-acento w-100">Ingresar</button>
       </form>
 
@@ -69,5 +87,7 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/validaciones.js"></script>
+  <script src="js/login.js"></script>
 </body>
 </html>

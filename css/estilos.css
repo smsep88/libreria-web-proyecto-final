@@ -82,3 +82,15 @@ body {
   .portada { padding: 2rem 0; }
   .caja-formulario { margin: 1rem; padding: 1.25rem; }
 }
+
+/* validacion del login (etapa 2) */
+.barra-fina { height: 6px; }
+.lista-requisitos {
+  list-style: none;
+  padding-left: 0;
+  font-size: .85rem;
+  color: #6c757d;
+}
+.lista-requisitos li::before { content: "✗ "; color: #dc3545; font-weight: bold; }
+.lista-requisitos li.cumple { color: #198754; }
+.lista-requisitos li.cumple::before { content: "✓ "; color: #198754; }
