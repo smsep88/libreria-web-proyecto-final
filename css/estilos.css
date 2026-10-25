@@ -94,3 +94,6 @@ body {
 .lista-requisitos li::before { content: "✗ "; color: #dc3545; font-weight: bold; }
 .lista-requisitos li.cumple { color: #198754; }
 .lista-requisitos li.cumple::before { content: "✓ "; color: #198754; }
+
+/* formularios de registro y paginas php (etapa 3) */
+.caja-ancha { max-width: 680px; }

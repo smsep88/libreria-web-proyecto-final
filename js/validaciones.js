@@ -27,3 +27,19 @@ const puntajePassword = (clave) => {
 function passwordSegura(clave) {
   return puntajePassword(clave) === 5;
 }
+
+// telefono de celular chileno: 9 digitos, con +56 opcional
+function validarTelefono(fono) {
+  const limpio = fono.replace(/\s/g, '');
+  return /^(\+?56)?9[0-9]{8}$/.test(limpio);
+}
+
+// texto con un minimo de caracteres
+function textoMinimo(valor, minimo) {
+  return valor.trim().length >= minimo;
+}
+
+// numero entero mayor o igual a un minimo
+function enteroMinimo(valor, minimo) {
+  return valor !== '' && Number.isInteger(Number(valor)) && Number(valor) >= minimo;
+}
