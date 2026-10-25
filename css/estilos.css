@@ -1,0 +1,84 @@
+/* estilos generales de la libreria */
+:root {
+  --color-principal: #2c3e50;
+  --color-acento: #e67e22;
+  --color-fondo: #f7f4ef;
+}
+
+body {
+  background-color: var(--color-fondo);
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #333;
+}
+
+/* encabezado */
+.encabezado {
+  background: linear-gradient(135deg, #2c3e50, #4a6572);
+  color: #fff;
+  padding: 2.2rem 0;
+  text-align: center;
+}
+.encabezado h1 { font-weight: 700; letter-spacing: 1px; }
+.encabezado p { margin: 0; opacity: .85; }
+
+/* encabezado reducido para las paginas internas */
+.encabezado-chico { padding: 1rem 0; }
+.encabezado-chico h1 { font-size: 1.6rem; margin: 0; }
+
+/* barra de navegacion */
+.navbar-libreria { background-color: var(--color-principal); }
+.navbar-libreria .nav-link { color: #ecf0f1; }
+.navbar-libreria .nav-link:hover,
+.navbar-libreria .nav-link.active { color: var(--color-acento); }
+
+/* portada */
+.portada { padding: 4rem 0; }
+.portada h2 { color: var(--color-principal); font-weight: 700; }
+
+/* botones */
+.btn-acento {
+  background-color: var(--color-acento);
+  border-color: var(--color-acento);
+  color: #fff;
+}
+.btn-acento:hover {
+  background-color: #cf6d17;
+  border-color: #cf6d17;
+  color: #fff;
+}
+
+/* tarjetas */
+.tarjeta-libro {
+  border: none;
+  border-radius: 12px;
+  transition: transform .2s, box-shadow .2s;
+}
+.tarjeta-libro:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
+}
+.icono-seccion { font-size: 2.5rem; }
+
+/* caja del formulario de login */
+.caja-formulario {
+  max-width: 460px;
+  margin: 2.5rem auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, .1);
+}
+
+/* pie de pagina */
+.pie {
+  background-color: var(--color-principal);
+  color: #bdc3c7;
+  padding: 1.5rem 0;
+}
+
+/* pantallas chicas */
+@media (max-width: 576px) {
+  .encabezado h1 { font-size: 1.6rem; }
+  .portada { padding: 2rem 0; }
+  .caja-formulario { margin: 1rem; padding: 1.25rem; }
+}

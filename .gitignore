@@ -1,0 +1,5 @@
+# archivos del editor y del sistema
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
