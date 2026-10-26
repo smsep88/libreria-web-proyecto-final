@@ -1,12 +1,12 @@
 <?php
-// registro de usuarios (etapa 3)
-// por ahora solo recibe los datos del formulario y los muestra
+// registro de usuarios: valida los datos y los guarda en la tabla usuarios
+require_once __DIR__ . '/includes/conexion.php';
 require_once __DIR__ . '/includes/funciones.php';
+require_once __DIR__ . '/includes/sesion.php';
 
 $titulo = 'Registro de usuarios';
 $datos = [];
 $errores = [];
-$registrado = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // recuperar los datos enviados por POST
@@ -37,10 +37,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errores[] = 'El teléfono debe ser un celular chileno (ej: +56 9 1234 5678).';
     }
 
-    // si no hay errores, los datos quedan listos para guardarse
+    // revisar que el correo no este usado
     if (!$errores) {
-        $registrado = true;
-        $datos['largo_clave'] = strlen($clave);
+        $existe = ejecutar($conexion, 'SELECT id FROM usuarios WHERE email = ?',
+            's', [$datos['email']])->get_result()->fetch_assoc();
+        if ($existe) {
+            $errores[] = 'Ese correo ya está registrado.';
+        }
+    }
+
+    // guardar el usuario (la clave se cifra antes)
+    if (!$errores) {
+        $hash = password_hash($clave, PASSWORD_DEFAULT);
+        ejecutar($conexion,
+            'INSERT INTO usuarios (nombre, email, contrasena, direccion, telefono) VALUES (?, ?, ?, ?, ?)',
+            'sssss', [$datos['nombre'], $datos['email'], $hash, $datos['direccion'], $datos['telefono']]);
+
+        header('Location: login.html?msg=registrado');
+        exit;
     }
 }
 
@@ -60,58 +74,45 @@ require __DIR__ . '/includes/header.php';
     </div>
   <?php endif; ?>
 
-  <?php if ($registrado): ?>
-    <!-- datos que llegaron al script -->
-    <div class="alert alert-success">Datos recibidos correctamente.</div>
-    <table class="table table-bordered">
-      <tr><th>Nombre</th><td><?= h($datos['nombre']) ?></td></tr>
-      <tr><th>Correo</th><td><?= h($datos['email']) ?></td></tr>
-      <tr><th>Contraseña</th><td><?= str_repeat('•', $datos['largo_clave']) ?></td></tr>
-      <tr><th>Dirección</th><td><?= h($datos['direccion']) ?></td></tr>
-      <tr><th>Teléfono</th><td><?= h($datos['telefono']) ?></td></tr>
-    </table>
-    <a href="registro_usuario.php" class="btn btn-outline-secondary">Registrar otro usuario</a>
-  <?php else: ?>
-    <form id="formRegistro" action="registro_usuario.php" method="post" novalidate>
-      <div class="mb-3">
-        <label for="nombre" class="form-label">Nombre completo</label>
-        <input type="text" class="form-control" id="nombre" name="nombre"
-               value="<?= h($datos['nombre'] ?? '') ?>" required>
-        <div class="invalid-feedback">Escribe tu nombre (mínimo 3 letras).</div>
+  <form id="formRegistro" action="registro_usuario.php" method="post" novalidate>
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre completo</label>
+      <input type="text" class="form-control" id="nombre" name="nombre"
+             value="<?= h($datos['nombre'] ?? '') ?>" required>
+      <div class="invalid-feedback">Escribe tu nombre (mínimo 3 letras).</div>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Correo electrónico</label>
+      <input type="email" class="form-control" id="email" name="email"
+             value="<?= h($datos['email'] ?? '') ?>" required>
+      <div class="invalid-feedback">Escribe un correo válido.</div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+        <div class="invalid-feedback">Mínimo 8 caracteres con mayúscula, minúscula, número y símbolo.</div>
       </div>
-      <div class="mb-3">
-        <label for="email" class="form-label">Correo electrónico</label>
-        <input type="email" class="form-control" id="email" name="email"
-               value="<?= h($datos['email'] ?? '') ?>" required>
-        <div class="invalid-feedback">Escribe un correo válido.</div>
+      <div class="col-md-6 mb-3">
+        <label for="password2" class="form-label">Repetir contraseña</label>
+        <input type="password" class="form-control" id="password2" name="password2" required>
+        <div class="invalid-feedback">Las contraseñas no coinciden.</div>
       </div>
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="password" class="form-label">Contraseña</label>
-          <input type="password" class="form-control" id="password" name="password" required>
-          <div class="invalid-feedback">Mínimo 8 caracteres con mayúscula, minúscula, número y símbolo.</div>
-        </div>
-        <div class="col-md-6 mb-3">
-          <label for="password2" class="form-label">Repetir contraseña</label>
-          <input type="password" class="form-control" id="password2" name="password2" required>
-          <div class="invalid-feedback">Las contraseñas no coinciden.</div>
-        </div>
-      </div>
-      <div class="mb-3">
-        <label for="direccion" class="form-label">Dirección de envío</label>
-        <input type="text" class="form-control" id="direccion" name="direccion"
-               value="<?= h($datos['direccion'] ?? '') ?>" required>
-        <div class="invalid-feedback">Escribe una dirección (mínimo 5 caracteres).</div>
-      </div>
-      <div class="mb-3">
-        <label for="telefono" class="form-label">Teléfono</label>
-        <input type="text" class="form-control" id="telefono" name="telefono"
-               placeholder="+56 9 1234 5678" value="<?= h($datos['telefono'] ?? '') ?>" required>
-        <div class="invalid-feedback">Escribe un celular chileno, por ejemplo +56 9 1234 5678.</div>
-      </div>
-      <button type="submit" class="btn btn-acento w-100">Crear cuenta</button>
-    </form>
-  <?php endif; ?>
+    </div>
+    <div class="mb-3">
+      <label for="direccion" class="form-label">Dirección de envío</label>
+      <input type="text" class="form-control" id="direccion" name="direccion"
+             value="<?= h($datos['direccion'] ?? '') ?>" required>
+      <div class="invalid-feedback">Escribe una dirección (mínimo 5 caracteres).</div>
+    </div>
+    <div class="mb-3">
+      <label for="telefono" class="form-label">Teléfono</label>
+      <input type="text" class="form-control" id="telefono" name="telefono"
+             placeholder="+56 9 1234 5678" value="<?= h($datos['telefono'] ?? '') ?>" required>
+      <div class="invalid-feedback">Escribe un celular chileno, por ejemplo +56 9 1234 5678.</div>
+    </div>
+    <button type="submit" class="btn btn-acento w-100">Crear cuenta</button>
+  </form>
 </div>
 
 <?php

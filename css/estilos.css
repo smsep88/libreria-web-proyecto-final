@@ -97,3 +97,14 @@ body {
 
 /* formularios de registro y paginas php (etapa 3) */
 .caja-ancha { max-width: 680px; }
+
+/* catalogo y carrito (etapa 5) */
+.portada-libro {
+  font-size: 3rem;
+  text-align: center;
+  background: #f1ece3;
+  border-radius: 8px;
+  padding: .5rem 0;
+}
+.precio { font-size: 1.15rem; font-weight: 700; color: var(--color-principal); }
+.col-cantidad { width: 230px; }
